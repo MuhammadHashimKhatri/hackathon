@@ -1,0 +1,159 @@
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
+
+body{
+  background:#f5f1ed;
+  padding:20px;
+}
+
+.lb-container{
+  max-width:1200px;
+  margin:auto;
+}
+
+.lb-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.lb-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.lb-logo-box{
+  background:#5a9a8f;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:10px;
+}
+
+.lb-nav{
+  display:flex;
+  gap:20px;
+}
+
+.lb-nav a{
+  text-decoration:none;
+  color:#555;
+  padding:8px 14px;
+  border-radius:20px;
+}
+
+.lb-nav a.active{
+  background:#e7e3df;
+}
+
+.lb-hero{
+  background:linear-gradient(135deg,#0e2a2a,#2f3f3f);
+  color:#fff;
+  padding:60px;
+  border-radius:30px;
+  margin-bottom:30px;
+}
+
+.lb-tag{
+  font-size:12px;
+  letter-spacing:2px;
+  opacity:.7;
+}
+
+.lb-hero h1{
+  font-size:40px;
+  margin:10px 0;
+}
+
+.lb-sub{
+  color:#ccc;
+}
+
+.lb-main{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+}
+
+.lb-small{
+  font-size:12px;
+  letter-spacing:2px;
+  color:#6b6b6b;
+}
+
+h2{
+  margin:10px 0 20px;
+}
+
+.lb-rank-card{
+  background:#f5f5f5;
+  border-radius:20px;
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.04);
+}
+
+.lb-user{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.lb-avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:14px;
+}
+
+.green{background:#5a9a8f;}
+.dark{background:#2c2c2c;}
+.orange{background:#d48b5c;}
+
+.lb-score{
+  text-align:right;
+}
+
+.lb-badge-card{
+  background:#f5f5f5;
+  padding:20px;
+  border-radius:20px;
+  margin-bottom:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.04);
+}
+
+.lb-bar{
+  height:8px;
+  background:#ddd;
+  border-radius:10px;
+  margin-top:10px;
+  overflow:hidden;
+}
+
+.lb-fill{
+  height:100%;
+  background:linear-gradient(90deg,#d4a44f,#5a9a8f);
+}
+
+@media(max-width:900px){
+  .lb-main{
+    grid-template-columns:1fr;
+  }
+
+  .lb-hero h1{
+    font-size:28px;
+  }
+}

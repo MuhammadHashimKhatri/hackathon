@@ -1,0 +1,204 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: #f4efe6;;
+  color: #111;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  background: #eee;
+  color: #000;
+}
+
+.nav-links a.active {
+  background: #e6e3df;
+  color: #000;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.btn-outline {
+  background: #eee;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+}
+
+.btn-primary {
+  background: #3a8f7b;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+}
+
+.explore-section {
+  margin-top: 60px;
+}
+
+.explore-banner {
+  background: linear-gradient(135deg, #0f2c2c, #2e3b3b);
+  color: white;
+  padding: 40px;
+  border-radius: 25px;
+  margin-bottom: 40px;
+}
+
+.explore-banner h1 {
+  font-size: 40px;
+  margin: 10px 0;
+}
+
+.explore-banner p {
+  color: #ccc;
+}
+
+.explore-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+.explore-layout {
+  display: flex;
+  gap: 30px;
+}
+
+.explore-filter {
+  width: 30%;
+  background: #f5f5f5;
+  padding: 25px;
+  border-radius: 20px;
+}
+
+.explore-filter h2 {
+  margin: 10px 0 20px;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.filter-group select,
+.filter-group input {
+  width: 100%;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.explore-cards {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.explore-card {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.explore-card h3 {
+  margin: 10px 0;
+}
+
+.explore-card p {
+  color: #555;
+}
+
+.explore-btn {
+  background: #eee;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.explore-btn:hover {
+  transform: translateY(-3px);
+}
+
+.tags span {
+  background: #ddd;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.skills span {
+  background: #ddd;
+  padding: 5px 10px;
+  border-radius: 15px;
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.high { background: #ffd6d6; }
+.medium { background: #ffe9b3; }
+.low { background: #d6f5d6; }
+.solved { background: #cdeccd; }
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+@media (max-width: 900px) {
+  .explore-layout {
+    flex-direction: column;
+  }
+
+  .explore-filter {
+    width: 100%;
+  }
+}

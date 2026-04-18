@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HelpHub Clone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="explore.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="leaderboard.css">
+
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+
+  <div class="logo">
+    <div class="logo-box">H</div>
+    <strong>HelpHub AI</strong>
+  </div>
+
+  <nav class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="explore.html" class="active">Explore</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="#">Notification</a>
+  </nav>
+
+</header>
+
+
+
+<section class="explore-section">
+
+  <div class="explore-banner">
+    <span class="explore-label">EXPLORE / FEED</span>
+    <h1>Browse help requests with filterable community context.</h1>
+    <p>Filter by category, urgency, skills, and location to surface the best matches.</p>
+  </div>
+
+  <div class="explore-layout">
+
+    <div class="explore-filter">
+
+      <span class="explore-label">FILTERS</span>
+      <h2>Refine the feed</h2>
+
+      <div class="filter-group">
+        <label>Category</label>
+        <select>
+          <option>All categories</option>
+          <option>Web Developement</option>
+          <option>Design</option>
+          <option>Career</option>
+          <option>Academics</option>
+          <option>Content</option>
+          <option>Community</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Urgency</label>
+        <select>
+          <option>All urgency levels</option>
+          <option>Critical</option>
+          <option>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Skills</label>
+        <input type="text" placeholder="React, Figma, Git/GitHub">
+      </div>
+
+      <div class="filter-group">
+        <label>Location</label>
+        <input type="text" placeholder="Karachi, Lahore, Remote">
+      </div>
+
+    </div>
+
+    <div class="explore-cards">
+
+      <div class="explore-card">
+        <div class="tags">
+          <span>Web Development</span>
+          <span class="high">High</span>
+          <span>Open</span>
+        </div>
+
+        <h3>Need help making my portfolio responsive before demo day</h3>
+        <p>My HTML/CSS portfolio breaks on tablets and I need layout guidance before tomorrow evening.</p>
+
+        <div class="skills">
+          <span>HTML/CSS</span>
+          <span>Responsive</span>
+          <span>Portfolio</span>
+        </div>
+
+        <div class="card-footer">
+          <div>
+            <strong>Sara Noor</strong><br>
+            <small>Karachi • 1 helper interested</small>
+          </div>
+          <button class="explore-btn">Open details</button>
+        </div>
+      </div>
+
+      <div class="explore-card">
+        <div class="tags">
+          <span>Design</span>
+          <span class="medium">Medium</span>
+          <span>Open</span>
+        </div>
+
+        <h3>Looking for Figma feedback on a volunteer event poster</h3>
+        <p>I have a draft poster and want sharper hierarchy, spacing, and CTA copy.</p>
+
+        <div class="skills">
+          <span>Figma</span>
+          <span>Poster</span>
+          <span>Design Review</span>
+        </div>
+
+        <div class="card-footer">
+          <div>
+            <strong>Ayesha Khan</strong><br>
+            <small>Lahore • 1 helper interested</small>
+          </div>
+          <button class="explore-btn">Open details</button>
+        </div>
+      </div>
+
+      <div class="explore-card">
+        <div class="tags">
+          <span>Career</span>
+          <span class="low">Low</span>
+          <span class="solved">Solved</span>
+        </div>
+
+        <h3>Need mock interview support for internship applications</h3>
+        <p>Applying to frontend internships and need someone to practice behavioral and technical interview questions.</p>
+
+        <div class="skills">
+          <span>Interview Prep</span>
+          <span>Career</span>
+          <span>Frontend</span>
+        </div>
+
+        <div class="card-footer">
+          <div>
+            <strong>Sara Noor</strong><br>
+            <small>Remote • 2 helpers interested</small>
+          </div>
+          <button class="explore-btn">Open details</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+  
+</body>
+</html>
