@@ -134,6 +134,7 @@ Task (functionalities 01, 02, 05):
 6. Users (Admin only): /api/users — list, create HR login (temp password generated server-side, shown once), deactivate/activate, reset password (new temp password + must_change_password=true). Admin cannot be created through this API.
 7. Wire the real role into the sidebar from Prompt 1; role dashboards route to /dashboard which renders the right dashboard per role.
 8. Remind me in the plan to disable "Allow new users to sign up" in Supabase Auth settings.
+9. Clean up Prompt 1 leftovers: delete the TEMP role preview (src/server/auth/previewRole.js, src/app/actions/preview.js, the "Preview as" section in the user menu) and use getActor() everywhere instead. Create the routes the existing forms already post to: POST /api/setup and POST /api/auth/change-password, reusing the zod schemas in src/lib/validation/auth.js. Add route protection in proxy.js (logged-out → /login, setup not done → /setup, must_change_password → /change-password) and role checks on every (app) page.
 Tests: guard unit tests (employee cannot pass requireRole('hr')), setup returns 409 the second time.
 Done when: fresh DB → /setup → admin logs in → creates HR → HR logs in, is forced to change password, sees HR menu.
 ```

@@ -3,23 +3,31 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/server/supabase/sessionClient";
+import { fieldErrorsOf, loginSchema } from "@/lib/validation/auth";
 
-function withMessage(path, message) {
-  return `${path}?message=${encodeURIComponent(message)}`;
-}
-
-export async function login(formData) {
-  const supabase = await createClient();
-
-  const { error } = await supabase.auth.signInWithPassword({
+// useActionState action: returns { values, fieldErrors?, formError? } or redirects.
+export async function login(prevState, formData) {
+  const values = { email: String(formData.get("email") ?? "") };
+  const parsed = loginSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
+  if (!parsed.success) return { values, fieldErrors: fieldErrorsOf(parsed.error) };
 
-  if (error) redirect(withMessage("/login", error.message));
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  if (error) {
+    const badCredentials = error.status === 400;
+    return {
+      values,
+      formError: badCredentials
+        ? "Email or password is incorrect."
+        : "Sign-in isn't available right now. Try again in a minute.",
+    };
+  }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function logout() {
