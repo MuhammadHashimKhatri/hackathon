@@ -1,5 +1,3 @@
-// Spec §6 Leave — days = working days in [start, end]
-
-export function countLeaveDays(start, end, { weekendDays, holidays }) {
-  throw new Error("Not implemented");
-}
+// Spec §6 Leave — the implementation lives in src/lib so the client preview
+// shares it without importing from src/server.
+export { countLeaveDays } from "@/lib/leaveDays";
