@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { KeyRound, LogOut } from "lucide-react";
 import { ROLE_LABELS } from "@/config/navigation";
-import { logout } from "@/app/actions/auth";
 import ThemeToggle from "./ThemeToggle";
 
 export default function UserMenu({ role, email }) {
@@ -46,7 +45,7 @@ export default function UserMenu({ role, email }) {
             <KeyRound size={16} aria-hidden />
             Change password
           </Link>
-          <form action={logout}>
+          <form action="/api/auth/logout" method="post">
             <button type="submit" className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-danger hover:bg-surface-2">
               <LogOut size={16} aria-hidden />
               Log out
