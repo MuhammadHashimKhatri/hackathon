@@ -13,7 +13,7 @@ Let Admin configure everything attendance, leave and payroll depend on — compa
 - HR: menu item "Company Setup" opens the same pages read-only (no edit controls). Every write endpoint returns 403 for HR, even via curl.
 
 ## Plan
-- Access: `NAV.hr` adds `/settings`; `rolesFor` matches by path prefix; `/settings` redirects to `/settings/company`; `SettingsTabs` on all three pages.
+- Access: `NAV.hr` adds `/settings` with `covers: SETTINGS_PAGES`; `rolesFor` grants an item's own href plus the pages it explicitly covers (plain path-prefix matching was rejected: it would have given Admin `/attendance/corrections` and `/leave/me` through their parent items); `/settings` redirects to `/settings/company`; `SettingsTabs` on all three pages.
 - Validation: `src/lib/validation/organization.js` (shared by forms and routes).
 - Services: `settings.js`, `organization.js`, `leaveTypes.js`, `holidays.js`; reads `admin|hr`, writes `admin` + `audit()`. DB error mapping in `src/server/dbErrors.js`.
 - Routes: `/api/settings`, `/api/departments[/id]`, `/api/designations[/id]`, `/api/leave-types[/id|/standard]`, `/api/holidays[/id]`.
