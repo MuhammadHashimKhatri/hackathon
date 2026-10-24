@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Menu, Sparkles } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Drawer from "@/components/ui/Drawer";
-import AIChatPanel from "@/components/ai/AIChatPanel";
+import AssistantChat from "@/components/ai/AssistantChat";
 import { ShellContext } from "./ShellContext";
 import NotificationsBell from "./NotificationsBell";
 
@@ -67,7 +67,7 @@ export default function ShellFrame({ nav, userMenu, companyName, children }) {
         {nav}
       </Drawer>
 
-      <AIChatPanel open={assistantOpen} onClose={() => setAssistantOpen(false)} />
+      <AssistantChat open={assistantOpen} onClose={() => setAssistantOpen(false)} />
     </ShellContext.Provider>
   );
 }

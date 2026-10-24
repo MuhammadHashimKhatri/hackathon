@@ -2,7 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarPlus, X } from "lucide-react";
+import { CalendarPlus, Sparkles, X } from "lucide-react";
+import AIBadge from "@/components/ui/AIBadge";
+import { controlClass } from "@/components/ui/Field";
 import { leaveApplySchema } from "@/lib/validation/leave";
 import { fieldErrorsOf } from "@/lib/validation/auth";
 import { countLeaveDays } from "@/lib/leaveDays";
@@ -68,16 +70,76 @@ function Preview({ form, context, balance }) {
   );
 }
 
+// Smart leave (Spec §8): a sentence becomes a pre-filled form. Nothing is sent
+// until the user checks the form and presses Send request.
+function SmartLeave({ onSuggestion }) {
+  const [text, setText] = useState("");
+  const [note, setNote] = useState(null);
+  const [pending, startTransition] = useTransition();
+
+  function onSubmit(e) {
+    e.preventDefault();
+    if (text.trim().length < 5) {
+      setNote({ tone: "error", text: "Describe the leave you need, for example: Need next Monday and Tuesday off for my sister's wedding." });
+      return;
+    }
+    startTransition(async () => {
+      const result = await postJson("/api/ai/smart-leave", { text });
+      if (result.ok && result.data.suggestion) {
+        onSuggestion(result.data.suggestion);
+        setNote({ tone: "ai", text: `Filled in ${result.data.suggestion.typeName}. Check the dates, then send.` });
+      } else {
+        setNote({ tone: "error", text: result.data?.message ?? result.error?.message ?? "Couldn't read that. Please fill in the form." });
+      }
+    });
+  }
+
+  return (
+    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-2 rounded-lg border border-dashed border-line p-3">
+      <label htmlFor="smart-leave" className="flex items-center gap-1.5 text-sm font-medium">
+        <Sparkles size={14} aria-hidden className="text-accent" /> Describe it in your words
+      </label>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <input
+          id="smart-leave"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Need next Monday and Tuesday off for my sister's wedding"
+          className={cn(controlClass, "h-10 flex-1")}
+        />
+        <Button type="submit" loading={pending} icon={Sparkles}>
+          Fill the form
+        </Button>
+      </div>
+      {note ? (
+        note.tone === "ai" ? (
+          <p className="flex flex-wrap items-center gap-2 text-[0.8125rem] text-muted">
+            <AIBadge /> {note.text}
+          </p>
+        ) : (
+          <p className="text-[0.8125rem] text-warning">{note.text}</p>
+        )
+      ) : null}
+    </form>
+  );
+}
+
 function ApplyForm({ balances, context, onApplied }) {
   const [form, setForm] = useState(EMPTY);
   const [state, setState] = useState({});
   const [pending, startTransition] = useTransition();
+  const [source, setSource] = useState("form");
   const balance = balances.find((b) => b.leaveTypeId === form.leaveTypeId);
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+  const applySuggestion = (s) => {
+    setForm({ leaveTypeId: s.leaveTypeId, startDate: s.startDate, endDate: s.endDate, reason: s.reason });
+    setSource("ai");
+    setState({});
+  };
 
   function onSubmit(e) {
     e.preventDefault();
-    const parsed = leaveApplySchema.safeParse(form);
+    const parsed = leaveApplySchema.safeParse({ ...form, source });
     if (!parsed.success) {
       setState({ fieldErrors: fieldErrorsOf(parsed.error) });
       return;
@@ -89,6 +151,7 @@ function ApplyForm({ balances, context, onApplied }) {
         return;
       }
       setForm(EMPTY);
+      setSource("form");
       setState({});
       onApplied(result.data.request);
     });
@@ -96,7 +159,8 @@ function ApplyForm({ balances, context, onApplied }) {
 
   return (
     <Card title="Apply for leave" description="HR gets a notification and decides. You can cancel while it's pending.">
-      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
+      <SmartLeave onSuggestion={applySuggestion} />
+      <form onSubmit={onSubmit} noValidate className="mt-4 flex flex-col gap-4">
         <FormAlert>{state.formError}</FormAlert>
         <Select
           label="Leave type"
