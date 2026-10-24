@@ -2,12 +2,11 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Banknote, CalendarX2, LogOut, Pencil, ReceiptText } from "lucide-react";
+import { Banknote, LogOut, Pencil, ReceiptText } from "lucide-react";
 import { GENDER_LABELS, selfUpdateSchema } from "@/lib/validation/employees";
 import { fieldErrorsOf } from "@/lib/validation/auth";
 import { formStateFromError, patchJson } from "@/lib/api";
 import { formatDate, formatMoney, formatMonth } from "@/lib/format";
-import { cn } from "@/lib/cn";
 import Badge, { STATUS } from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -21,6 +20,7 @@ import Table from "@/components/ui/Table";
 import Tabs from "@/components/ui/Tabs";
 import Textarea from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toast";
+import MonthCalendar from "@/components/attendance/MonthCalendar";
 import EmployeeForm from "./EmployeeForm";
 import ExitDialog from "./ExitDialog";
 import SalaryDialog from "./SalaryDialog";
@@ -139,47 +139,38 @@ export function SalaryHistoryTable({ history }) {
   );
 }
 
-const DAY_TONE = {
-  present: "bg-success-soft text-success",
-  late: "bg-warning-soft text-warning",
-  half_day: "bg-caution-soft text-caution",
-  absent: "bg-danger-soft text-danger",
-  on_leave: "bg-info-soft text-info",
-  missing_checkout: "bg-neutral-soft text-neutral",
-};
 const ATTENDANCE_ORDER = ["present", "late", "half_day", "missing_checkout", "absent", "on_leave"];
-const weekday = new Intl.DateTimeFormat("en-GB", { weekday: "short", timeZone: "UTC" });
 
-function AttendanceTab({ attendance }) {
-  const { counts, days, from, to } = attendance;
+// Month calendar; the arrows load other months from the API in place.
+function AttendanceTab({ employeeId, initial }) {
+  const [calendar, setCalendar] = useState(initial);
+  const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  async function loadMonth(month) {
+    setLoading(true);
+    setFailed(false);
+    try {
+      const res = await fetch(`/api/employees/${employeeId}/attendance?month=${month}`);
+      if (!res.ok) throw new Error(String(res.status));
+      setCalendar(await res.json());
+    } catch {
+      setFailed(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {ATTENDANCE_ORDER.map((s) => (
-          <StatCard key={s} label={STATUS[s].label} value={counts[s]} />
+          <StatCard key={s} label={STATUS[s].label} value={calendar.counts[s]} loading={loading} />
         ))}
       </div>
-      <Card title={formatMonth(from)} description={`Up to ${formatDate(to)}. Today shows once they check in.`}>
-        {days.length === 0 ? (
-          <EmptyState compact icon={CalendarX2} title="Nothing recorded this month yet" />
-        ) : (
-          <ol className="grid grid-cols-[repeat(auto-fill,minmax(4.5rem,1fr))] gap-2">
-            {days.map((d) => {
-              const date = new Date(`${d.date}T00:00:00Z`);
-              return (
-                <li
-                  key={d.date}
-                  title={`${formatDate(d.date)}: ${STATUS[d.status]?.label ?? d.status}`}
-                  className={cn("flex flex-col rounded-lg px-2 py-1.5", DAY_TONE[d.status])}
-                >
-                  <span className="text-[0.75rem] opacity-80">{weekday.format(date)}</span>
-                  <span className="figure text-base font-semibold">{date.getUTCDate()}</span>
-                  <span className="truncate text-[0.6875rem]">{STATUS[d.status]?.label}</span>
-                </li>
-              );
-            })}
-          </ol>
-        )}
+      <Card>
+        <FormAlert className="mb-3">{failed ? "That month didn't load. Try again." : null}</FormAlert>
+        <MonthCalendar calendar={calendar} onMonth={loadMonth} loading={loading} />
       </Card>
     </div>
   );
@@ -363,7 +354,7 @@ export default function Employee360({ data, mode, departments = [], designations
           if (active === "salary") {
             return <SalaryTab salary={data.salary} canManage={hr && !isSelfRecordForHr} onSet={() => setDialog("salary")} />;
           }
-          if (active === "attendance") return <AttendanceTab attendance={data.attendance} />;
+          if (active === "attendance") return <AttendanceTab employeeId={employee.id} initial={data.attendance} />;
           if (active === "leave") return <LeaveTab balances={data.leaveBalances} recent={data.recentLeave} year={today.slice(0, 4)} />;
           if (active === "payslips") return <PayslipsTab payslips={data.payslips} />;
           return <Overview employee={employee} login={data.login} />;

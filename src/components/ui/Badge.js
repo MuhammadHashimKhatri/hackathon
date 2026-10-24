@@ -18,6 +18,8 @@ export const STATUS = {
   absent: { tone: "danger", label: "Absent" },
   on_leave: { tone: "info", label: "On leave" },
   missing_checkout: { tone: "neutral", label: "Missing check-out" },
+  not_in_yet: { tone: "neutral", label: "Not checked in yet" },
+  off_day: { tone: "neutral", label: "Off day" },
   pending: { tone: "warning", label: "Pending" },
   approved: { tone: "success", label: "Approved" },
   rejected: { tone: "danger", label: "Rejected" },

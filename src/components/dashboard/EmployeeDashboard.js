@@ -1,31 +1,22 @@
-import { CalendarDays, MapPin, Megaphone, ReceiptText } from "lucide-react";
-import Button from "@/components/ui/Button";
+import { CalendarDays, Megaphone, ReceiptText } from "lucide-react";
 import Card from "@/components/ui/Card";
-import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
 import StatCard from "@/components/ui/StatCard";
 import AskAssistantButton from "./AskAssistantButton";
 import ChartPanel from "./ChartPanel";
+import CheckInWidget from "@/components/attendance/CheckInWidget";
+import { getPageActor } from "@/server/auth/session";
+import { getToday } from "@/server/services/attendance";
 
-// Spec §7 Employee dashboard. Check-in is wired in Prompt 6, the rest in Prompt 9.
-export default function EmployeeDashboard() {
+// Spec §7 Employee dashboard. Check-in is live (Prompt 6); the rest comes in Prompt 9.
+export default async function EmployeeDashboard() {
+  const today = await getToday(await getPageActor());
   return (
     <>
       <PageHeader title="Dashboard" description="Your attendance, leave and pay at a glance." />
       <div className="flex flex-col gap-4">
         <Card title="Today" description="Check in when you arrive and check out when you leave.">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <EmptyState
-              compact
-              icon={MapPin}
-              title="No employee record linked"
-              description="Ask HR to register you as an employee to start checking in."
-              className="items-start py-0 text-left sm:flex-row sm:items-center"
-            />
-            <Button variant="primary" icon={MapPin} disabled className="w-full sm:w-auto">
-              Check in
-            </Button>
-          </div>
+          <CheckInWidget today={today} compact />
         </Card>
         <div className="grid grid-cols-2 gap-3">
           <StatCard label="Hours this week" value={null} hint="Target 40 h" />

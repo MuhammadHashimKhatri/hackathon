@@ -15,6 +15,7 @@ import {
   updateEmployeeSchema,
 } from "@/lib/validation/employees";
 import { findEmployee, queryEmployees, toEmployee } from "./employeeQuery";
+import { getCalendar } from "./attendance";
 import { getLeaveBalances } from "./leaveBalance";
 import { pickCurrent, salaryHistoryOf } from "./salary";
 
@@ -234,8 +235,6 @@ export async function exitEmployee(actor, id, input) {
   return { employee: toEmployee(await findEmployee(id)), loginDeactivated };
 }
 
-const ATTENDANCE_STATUSES = ["present", "late", "half_day", "missing_checkout", "absent", "on_leave"];
-
 // Everything about one employee. Salary and login details are Admin/HR only;
 // an Employee may only ask for their own id (403 otherwise, before any read).
 export async function getEmployee360(actor, id) {
@@ -244,7 +243,6 @@ export async function getEmployee360(actor, id) {
   const staff = actor.role !== "employee";
 
   const [row, today] = await Promise.all([findEmployee(id), companyToday()]);
-  const monthStart = `${today.slice(0, 8)}01`;
   const db = getDb();
 
   let payslipQuery = db
@@ -254,7 +252,7 @@ export async function getEmployee360(actor, id) {
   if (!staff) payslipQuery = payslipQuery.eq("payroll_runs.status", "finalized");
 
   const [attendance, leaveBalances, recentLeave, payslips, salaryHistory, login] = await Promise.all([
-    db.rpc("fn_attendance_days", { p_from: monthStart, p_to: today }).eq("employee_id", id),
+    getCalendar(actor, {}, id),
     getLeaveBalances(id, Number(today.slice(0, 4))),
     db
       .from("leave_requests")
@@ -268,20 +266,12 @@ export async function getEmployee360(actor, id) {
       ? db.from("app_users").select("role, is_active, must_change_password").eq("id", row.user_id).maybeSingle()
       : { data: null, error: null },
   ]);
-  for (const result of [attendance, recentLeave, payslips, login]) if (result.error) throw result.error;
-
-  const counts = Object.fromEntries(ATTENDANCE_STATUSES.map((s) => [s, 0]));
-  for (const day of attendance.data) counts[day.effective_status] += 1;
+  for (const result of [recentLeave, payslips, login]) if (result.error) throw result.error;
 
   return {
     employee: toEmployee(row),
     today,
-    attendance: {
-      from: monthStart,
-      to: today,
-      counts,
-      days: attendance.data.map((d) => ({ date: d.work_date, status: d.effective_status })),
-    },
+    attendance,
     leaveBalances,
     recentLeave: recentLeave.data.map((r) => ({
       id: r.id,

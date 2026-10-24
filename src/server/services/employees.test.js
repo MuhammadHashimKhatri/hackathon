@@ -134,6 +134,9 @@ describe("Employee 360 scope", () => {
   test("an employee's own 360 has no salary or login details", async () => {
     db = withRpc((table) => {
       if (table === "rpc:fn_company_today") return { data: "2026-10-24", error: null };
+      if (table === "company_settings") {
+        return { data: { timezone: "Asia/Karachi", office_start: "09:00:00", weekend_days: [0, 6], half_day_hours: 5 }, error: null };
+      }
       if (table === "employees") return { data: employeeRow(ME), error: null };
       if (table === "rpc:fn_attendance_days") {
         return { data: [{ work_date: "2026-10-01", effective_status: "present" }, { work_date: "2026-10-02", effective_status: "late" }], error: null };
