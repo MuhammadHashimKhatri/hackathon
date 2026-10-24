@@ -1,22 +1,32 @@
-import { Building2 } from "lucide-react";
-import Card from "@/components/ui/Card";
-import EmptyState from "@/components/ui/EmptyState";
-import PageHeader from "@/components/ui/PageHeader";
 import RoleGate from "@/components/shell/RoleGate";
+import PageHeader from "@/components/ui/PageHeader";
+import SettingsTabs from "@/components/settings/SettingsTabs";
+import { getPageActor } from "@/server/auth/session";
+import { getSettings } from "@/server/services/settings";
+import CompanySettingsForm from "./CompanySettingsForm";
 
 export const metadata = { title: "Company Settings" };
 
-export default function Page() {
+async function CompanySettings() {
+  const actor = await getPageActor();
+  const settings = await getSettings(actor);
+  const canEdit = actor.role === "admin";
+  return (
+    <>
+      <SettingsTabs readOnly={!canEdit} />
+      <CompanySettingsForm initial={settings} canEdit={canEdit} />
+    </>
+  );
+}
+
+export default function CompanySettingsPage() {
   return (
     <RoleGate href="/settings/company">
-      <PageHeader title="Company Settings" description="Office hours, grace period, weekend days and the office location used for check-in." />
-      <Card>
-        <EmptyState
-          icon={Building2}
-          title="Company settings aren't saved yet"
-          description="Admin sets office hours, grace minutes, weekend days and the office location here."
-        />
-      </Card>
+      <PageHeader
+        title="Company Settings"
+        description="Office hours, weekend, check-in location and late rules. Changes apply to new records only."
+      />
+      <CompanySettings />
     </RoleGate>
   );
 }

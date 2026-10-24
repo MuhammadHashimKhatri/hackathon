@@ -9,6 +9,7 @@ import { formStateFromError, patchJson, postJson } from "@/lib/api";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import Dialog from "@/components/ui/Dialog";
 import EmptyState from "@/components/ui/EmptyState";
 import FormAlert from "@/components/ui/FormAlert";
@@ -90,8 +91,8 @@ function TempPasswordDialog({ grant, onClose }) {
   );
 }
 
-function ConfirmDialog({ action, onClose, onConfirm, pending }) {
-  if (!action) return <Dialog open={false} onClose={onClose} title="" />;
+function ConfirmUserAction({ action, onClose, onConfirm, pending }) {
+  if (!action) return <ConfirmDialog open={false} onClose={onClose} title="" />;
   const copy = {
     deactivate: {
       title: "Deactivate this login?",
@@ -113,22 +114,15 @@ function ConfirmDialog({ action, onClose, onConfirm, pending }) {
     },
   }[action.type];
   return (
-    <Dialog
+    <ConfirmDialog
       open
       onClose={onClose}
+      onConfirm={onConfirm}
+      pending={pending}
       title={copy.title}
       description={copy.description}
-      size="sm"
-      footer={
-        <>
-          <Button onClick={onClose} disabled={pending}>
-            Cancel
-          </Button>
-          <Button variant={copy.variant} loading={pending} onClick={onConfirm}>
-            {copy.button}
-          </Button>
-        </>
-      }
+      confirmLabel={copy.button}
+      variant={copy.variant}
     />
   );
 }
@@ -247,7 +241,7 @@ export default function UsersManager({ users, currentUserId }) {
 
       {creating ? <CreateHrDialog open onClose={() => setCreating(false)} onCreated={onCreated} /> : null}
       <TempPasswordDialog grant={grant} onClose={() => setGrant(null)} />
-      <ConfirmDialog action={action} onClose={() => setAction(null)} onConfirm={runAction} pending={pending} />
+      <ConfirmUserAction action={action} onClose={() => setAction(null)} onConfirm={runAction} pending={pending} />
     </>
   );
 }

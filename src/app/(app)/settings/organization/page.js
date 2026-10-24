@@ -1,22 +1,29 @@
-import { Network } from "lucide-react";
-import Card from "@/components/ui/Card";
-import EmptyState from "@/components/ui/EmptyState";
-import PageHeader from "@/components/ui/PageHeader";
 import RoleGate from "@/components/shell/RoleGate";
+import PageHeader from "@/components/ui/PageHeader";
+import SettingsTabs from "@/components/settings/SettingsTabs";
+import { getPageActor } from "@/server/auth/session";
+import { listOrganization } from "@/server/services/organization";
+import OrganizationManager from "./OrganizationManager";
 
 export const metadata = { title: "Departments & Designations" };
 
-export default function Page() {
+async function Organization() {
+  const actor = await getPageActor();
+  const data = await listOrganization(actor);
+  const canEdit = actor.role === "admin";
+  return (
+    <>
+      <SettingsTabs readOnly={!canEdit} />
+      <OrganizationManager {...data} canEdit={canEdit} />
+    </>
+  );
+}
+
+export default function OrganizationPage() {
   return (
     <RoleGate href="/settings/organization">
       <PageHeader title="Departments & Designations" description="The structure employees are assigned to." />
-      <Card>
-        <EmptyState
-          icon={Network}
-          title="No departments yet"
-          description="Admin adds departments and the designations inside them here."
-        />
-      </Card>
+      <Organization />
     </RoleGate>
   );
 }
