@@ -53,7 +53,7 @@ Then:
 The key is only read on the server (`AI_API_KEY`); the browser never calls the provider.
 
 - **Groq (free, fast)**: create a key at https://console.groq.com/keys, then
-  `AI_BASE_URL=https://api.groq.com/openai/v1`, `AI_MODEL=llama-3.3-70b-versatile`.
+  `AI_BASE_URL=https://api.groq.com/openai/v1`, `AI_MODEL=openai/gpt-oss-120b`.
 - **Google Gemini (free)**: create a key at https://aistudio.google.com/apikey, then
   `AI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/`, `AI_MODEL=gemini-2.5-flash`.
 
