@@ -7,6 +7,7 @@ const variants = {
   secondary: "border border-line bg-surface text-ink hover:bg-surface-2",
   ghost: "text-ink hover:bg-surface-2",
   danger: "bg-danger text-surface hover:opacity-90",
+  "danger-ghost": "text-danger hover:bg-danger-soft",
 };
 
 const sizes = {

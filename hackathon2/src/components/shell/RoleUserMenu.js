@@ -1,10 +1,10 @@
-import { getPreviewActor } from "@/server/auth/previewRole";
+import { getPageActor } from "@/server/auth/session";
 import Skeleton from "@/components/ui/Skeleton";
 import UserMenu from "./UserMenu";
 
-// Reads the (preview) role, so it must be rendered inside <Suspense>.
+// Reads the session, so it must be rendered inside <Suspense>.
 export default async function RoleUserMenu() {
-  const { role, email } = await getPreviewActor();
+  const { role, email } = await getPageActor();
   return <UserMenu role={role} email={email} />;
 }
 

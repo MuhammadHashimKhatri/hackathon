@@ -1,12 +1,20 @@
 // Client-side JSON POST to our /api routes. Never throws: returns
 // { ok: true, data } or { ok: false, status, error } where error is the
 // { code, message, details } body produced by src/server/errors.js.
-export async function postJson(path, body) {
+export function postJson(path, body) {
+  return sendJson("POST", path, body);
+}
+
+export function patchJson(path, body) {
+  return sendJson("PATCH", path, body);
+}
+
+export async function sendJson(method, path, body) {
   try {
     const res = await fetch(path, {
-      method: "POST",
+      method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: body === undefined ? undefined : JSON.stringify(body),
     });
     const data = await res.json().catch(() => null);
     if (res.ok) return { ok: true, data };

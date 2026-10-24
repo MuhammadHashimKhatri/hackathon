@@ -2,12 +2,13 @@ import { Banknote } from "lucide-react";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
+import RoleGate from "@/components/shell/RoleGate";
 
 export const metadata = { title: "Salary Structures" };
 
 export default function Page() {
   return (
-    <>
+    <RoleGate href="/salary">
       <PageHeader title="Salary Structures" description="Basic pay per employee; HRA and medical are calculated from it." />
       <Card>
         <EmptyState
@@ -16,6 +17,6 @@ export default function Page() {
           description="HR sets each employee's basic pay here after registering them."
         />
       </Card>
-    </>
+    </RoleGate>
   );
 }

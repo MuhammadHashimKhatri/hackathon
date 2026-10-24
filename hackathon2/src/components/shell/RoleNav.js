@@ -1,10 +1,10 @@
-import { getPreviewActor } from "@/server/auth/previewRole";
+import { getPageActor } from "@/server/auth/session";
 import Skeleton from "@/components/ui/Skeleton";
 import NavLinks from "./NavLinks";
 
-// Reads the (preview) role, so it must be rendered inside <Suspense>.
+// Reads the session, so it must be rendered inside <Suspense>.
 export default async function RoleNav() {
-  const { role } = await getPreviewActor();
+  const { role } = await getPageActor();
   return (
     <nav aria-label="Main">
       <NavLinks role={role} />

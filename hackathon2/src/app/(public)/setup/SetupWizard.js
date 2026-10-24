@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { fieldErrorsOf, setupAdminSchema, setupCompanySchema } from "@/lib/validation/auth";
+import { fieldErrorsOf, setupAdminEnvPasswordSchema, setupAdminSchema, setupCompanySchema } from "@/lib/validation/auth";
 import { formStateFromError, postJson } from "@/lib/api";
 import Button from "@/components/ui/Button";
 import FormAlert from "@/components/ui/FormAlert";
@@ -28,11 +28,12 @@ function StepIndicator({ step }) {
   );
 }
 
-export default function SetupWizard() {
+// suggestedEmail / envPasswordAvailable come from ADMIN_EMAIL / ADMIN_PASSWORD on the server.
+export default function SetupWizard({ suggestedEmail = null, envPasswordAvailable = false }) {
   const router = useRouter();
   const { toast } = useToast();
   const [step, setStep] = useState(0);
-  const [values, setValues] = useState({ companyName: "", adminEmail: "", adminPassword: "", confirmPassword: "" });
+  const [values, setValues] = useState({ companyName: "", adminEmail: suggestedEmail ?? "", adminPassword: "", confirmPassword: "" });
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState(null);
   const [pending, startTransition] = useTransition();
@@ -56,7 +57,7 @@ export default function SetupWizard() {
     e.preventDefault();
     setFormError(null);
     const company = setupCompanySchema.safeParse(values);
-    const admin = setupAdminSchema.safeParse(values);
+    const admin = (envPasswordAvailable ? setupAdminEnvPasswordSchema : setupAdminSchema).safeParse(values);
     if (!admin.success) return setErrors(fieldErrorsOf(admin.error));
     if (!company.success) return setStep(0);
     setErrors({});
@@ -94,11 +95,21 @@ export default function SetupWizard() {
             label="Password"
             type="password"
             autoComplete="new-password"
-            hint="At least 8 characters."
-            required
+            hint={
+              envPasswordAvailable
+                ? "Leave blank to use the password set in ADMIN_PASSWORD on the server."
+                : "At least 8 characters."
+            }
+            required={!envPasswordAvailable}
             {...bind("adminPassword")}
           />
-          <Input label="Confirm password" type="password" autoComplete="new-password" required {...bind("confirmPassword")} />
+          <Input
+            label="Confirm password"
+            type="password"
+            autoComplete="new-password"
+            required={!envPasswordAvailable}
+            {...bind("confirmPassword")}
+          />
           <div className="mt-1 flex gap-2">
             <Button icon={ArrowLeft} onClick={() => setStep(0)} disabled={pending}>
               Back

@@ -56,6 +56,13 @@ for (const table of TABLES) {
   report(!rows.error && Array.isArray(rows.data), "fn_attendance_days (this month)", rows.error?.message ?? `${rows.data.length} rows`);
 }
 
+// 2b. Auth functions from 002_auth.sql (read-only call; fn_complete_setup is only checked for privileges).
+{
+  const { data, error } = await server.rpc("fn_proxy_state", { p_user: null });
+  report(!error && typeof data?.setup_completed === "boolean", "fn_proxy_state (002_auth.sql)",
+    error?.message ?? `setup_completed=${data.setup_completed}`);
+}
+
 // 3. Lock-down: RLS, triggers, no anon privileges.
 {
   const { data: health, error } = await server.rpc("fn_schema_health");

@@ -67,6 +67,11 @@ export const NAV = {
   ],
 };
 
+// Roles whose menu contains href: the page access rule for RoleGate.
+export function rolesFor(href) {
+  return ROLES.filter((role) => NAV[role].some((item) => item.href === href));
+}
+
 // Longest matching href wins, so /attendance/corrections doesn't also light up /attendance.
 export function activeHref(items, pathname) {
   let best = null;

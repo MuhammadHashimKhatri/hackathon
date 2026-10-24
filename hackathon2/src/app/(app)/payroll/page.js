@@ -2,12 +2,13 @@ import { Wallet } from "lucide-react";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
+import RoleGate from "@/components/shell/RoleGate";
 
 export const metadata = { title: "Payroll" };
 
 export default function Page() {
   return (
-    <>
+    <RoleGate href="/payroll">
       <PageHeader title="Payroll" description="Monthly payroll drafts and finalized runs." />
       <Card>
         <EmptyState
@@ -16,6 +17,6 @@ export default function Page() {
           description="HR creates a draft for a month; Admin finalizes it to lock the month."
         />
       </Card>
-    </>
+    </RoleGate>
   );
 }
