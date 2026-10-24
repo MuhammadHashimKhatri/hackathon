@@ -18,6 +18,15 @@ test("HR's Company Setup item covers the three settings pages, nothing else", ()
   expect(rolesFor("/employees/import")).toEqual(["hr"]);
 });
 
+test("employees: Admin views, only HR registers, both see salaries", () => {
+  expect(rolesFor("/employees")).toEqual(["admin", "hr"]);
+  expect(rolesFor("/employees/new")).toEqual(["hr"]);
+  expect(rolesFor("/salary")).toEqual(["admin", "hr"]);
+  expect(rolesFor("/profile")).toEqual(["employee"]);
+  expect(activeHref(NAV.hr, "/employees/new")).toBe("/employees");
+  expect(activeHref(NAV.hr, "/employees/import")).toBe("/employees/import");
+});
+
 test("the most specific menu item is active", () => {
   expect(activeHref(NAV.hr, "/attendance/corrections")).toBe("/attendance/corrections");
   expect(activeHref(NAV.hr, "/attendance")).toBe("/attendance");

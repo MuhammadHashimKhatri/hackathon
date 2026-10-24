@@ -1,22 +1,18 @@
-import { FileSpreadsheet } from "lucide-react";
-import Card from "@/components/ui/Card";
-import EmptyState from "@/components/ui/EmptyState";
-import PageHeader from "@/components/ui/PageHeader";
 import RoleGate from "@/components/shell/RoleGate";
+import PageHeader from "@/components/ui/PageHeader";
+import ImportManager from "./ImportManager";
 
 export const metadata = { title: "Import / Export" };
 
-export default function Page() {
+export default function ImportPage() {
   return (
     <RoleGate href="/employees/import">
-      <PageHeader title="Import / Export" description="Bulk-add employees from CSV with a dry run first, or export the directory." />
-      <Card>
-        <EmptyState
-          icon={FileSpreadsheet}
-          title="Nothing imported yet"
-          description="Upload a CSV to check it in a dry run before any employee is created."
-        />
-      </Card>
+      <PageHeader
+        title="Import / Export"
+        description="Add many employees from a CSV file. A dry run checks every row first; nothing is created until the whole file is clean."
+        breadcrumbs={[{ label: "Employees", href: "/employees" }, { label: "Import / Export" }]}
+      />
+      <ImportManager />
     </RoleGate>
   );
 }

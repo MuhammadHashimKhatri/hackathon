@@ -35,6 +35,7 @@ export const NAV = {
     { label: "Leave Types & Holidays", href: "/settings/leave", icon: CalendarRange },
     { label: "Users", href: "/users", icon: UserCog },
     { label: "Employees", href: "/employees", icon: Users },
+    { label: "Salary Structures", href: "/salary", icon: Banknote },
     { label: "Attendance", href: "/attendance", icon: Clock },
     { label: "Leave", href: "/leave", icon: CalendarCheck },
     { label: "Payroll", href: "/payroll", icon: Wallet },
@@ -45,7 +46,8 @@ export const NAV = {
   ],
   hr: [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Employees", href: "/employees", icon: Users },
+    // Registering is HR-only, so only HR's item covers the register page.
+    { label: "Employees", href: "/employees", icon: Users, covers: ["/employees/new"] },
     { label: "Import/Export", href: "/employees/import", icon: FileSpreadsheet },
     { label: "Attendance Board", href: "/attendance", icon: Clock },
     { label: "Corrections", href: "/attendance/corrections", icon: ClipboardCheck },

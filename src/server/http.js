@@ -1,6 +1,7 @@
 import { unstable_rethrow } from "next/navigation";
-import { z } from "zod";
 import { AppError, toResponse } from "./errors";
+
+export { parse } from "./validate";
 
 // Wraps a route handler; ctx is passed through untouched (ctx.params is a Promise)
 export function withApi(handler) {
@@ -14,16 +15,6 @@ export function withApi(handler) {
       return toResponse(err);
     }
   };
-}
-
-export function parse(schema, data) {
-  const result = schema.safeParse(data);
-  if (!result.success) {
-    throw new AppError(422, "VALIDATION_ERROR", "Invalid input", {
-      fieldErrors: z.flattenError(result.error).fieldErrors,
-    });
-  }
-  return result.data;
 }
 
 export async function readJson(request) {

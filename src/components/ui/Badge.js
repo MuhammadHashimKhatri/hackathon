@@ -22,6 +22,9 @@ export const STATUS = {
   approved: { tone: "success", label: "Approved" },
   rejected: { tone: "danger", label: "Rejected" },
   cancelled: { tone: "neutral", label: "Cancelled" },
+  probation: { tone: "warning", label: "Probation" },
+  active: { tone: "success", label: "Active" },
+  exited: { tone: "neutral", label: "Exited" },
   draft: { tone: "warning", label: "Draft" },
   finalized: { tone: "success", label: "Finalized" },
 };
