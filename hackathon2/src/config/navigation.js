@@ -24,6 +24,8 @@ export const ROLES = ["admin", "hr", "employee"];
 
 export const ROLE_LABELS = { admin: "Admin", hr: "HR", employee: "Employee" };
 
+export const SETTINGS_PAGES = ["/settings/company", "/settings/organization", "/settings/leave"];
+
 // The only source of sidebar/drawer menus (Spec §4, Prompt 1).
 export const NAV = {
   admin: [
@@ -53,6 +55,8 @@ export const NAV = {
     { label: "Payroll", href: "/payroll", icon: Wallet },
     { label: "Payslips", href: "/payslips", icon: ReceiptText },
     { label: "Announcements", href: "/announcements", icon: Megaphone },
+    // Read-only view of Admin's three settings pages (Spec §4 rows 03–04).
+    { label: "Company Setup", href: "/settings", icon: Building2, covers: SETTINGS_PAGES },
     { label: "AI Assistant", href: "/assistant", icon: Sparkles },
   ],
   employee: [
@@ -67,16 +71,20 @@ export const NAV = {
   ],
 };
 
-// Roles whose menu contains href: the page access rule for RoleGate.
+// An item grants its own href plus any pages it explicitly `covers`.
+const grants = (item, href) => item.href === href || Boolean(item.covers?.includes(href));
+
+// Roles whose menu grants href: the page access rule for RoleGate.
 export function rolesFor(href) {
-  return ROLES.filter((role) => NAV[role].some((item) => item.href === href));
+  return ROLES.filter((role) => NAV[role].some((item) => grants(item, href)));
 }
 
 // Longest matching href wins, so /attendance/corrections doesn't also light up /attendance.
 export function activeHref(items, pathname) {
   let best = null;
-  for (const { href } of items) {
-    if (pathname === href || pathname.startsWith(`${href}/`)) {
+  for (const item of items) {
+    const { href } = item;
+    if (pathname === href || pathname.startsWith(`${href}/`) || grants(item, pathname)) {
       if (!best || href.length > best.length) best = href;
     }
   }

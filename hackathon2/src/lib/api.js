@@ -9,6 +9,10 @@ export function patchJson(path, body) {
   return sendJson("PATCH", path, body);
 }
 
+export function deleteJson(path) {
+  return sendJson("DELETE", path);
+}
+
 export async function sendJson(method, path, body) {
   try {
     const res = await fetch(path, {
