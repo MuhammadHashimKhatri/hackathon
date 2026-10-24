@@ -1,3 +1,4 @@
+import { unstable_rethrow } from "next/navigation";
 import { z } from "zod";
 import { AppError, toResponse } from "./errors";
 
@@ -7,6 +8,9 @@ export function withApi(handler) {
     try {
       return await handler(request, ctx);
     } catch (err) {
+      // Let Next's own control flow (redirect, notFound, prerender bail-outs
+      // from connection()/cookies()) through instead of turning it into a 500.
+      unstable_rethrow(err);
       return toResponse(err);
     }
   };

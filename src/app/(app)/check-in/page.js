@@ -2,12 +2,13 @@ import { MapPin } from "lucide-react";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
+import RoleGate from "@/components/shell/RoleGate";
 
 export const metadata = { title: "Check-in" };
 
 export default function Page() {
   return (
-    <>
+    <RoleGate href="/check-in">
       <PageHeader title="Check-in" description="Check in when you arrive and check out when you leave." />
       <Card>
         <EmptyState
@@ -16,6 +17,6 @@ export default function Page() {
           description="Ask HR to register you as an employee to start checking in."
         />
       </Card>
-    </>
+    </RoleGate>
   );
 }

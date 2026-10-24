@@ -2,12 +2,13 @@ import { Clock } from "lucide-react";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
+import RoleGate from "@/components/shell/RoleGate";
 
 export const metadata = { title: "My Attendance" };
 
 export default function Page() {
   return (
-    <>
+    <RoleGate href="/attendance/me">
       <PageHeader title="My Attendance" description="Your check-ins, late days and half days by month." />
       <Card>
         <EmptyState
@@ -16,6 +17,6 @@ export default function Page() {
           description="Your days appear here after your first check-in."
         />
       </Card>
-    </>
+    </RoleGate>
   );
 }
