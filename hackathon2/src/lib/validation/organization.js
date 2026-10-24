@@ -5,10 +5,10 @@ import { z } from "zod";
 export const TIMEZONES = Intl.supportedValuesOf("timeZone");
 const timezoneSet = new Set([...TIMEZONES, "UTC"]);
 
-const name = (label, max = 100) =>
+export const name = (label, max = 100) =>
   z.string().trim().min(1, `Enter ${label}`).max(max, `Use ${max} characters or fewer`);
 
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use a valid date").refine(
+export const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use a valid date").refine(
   (s) => !Number.isNaN(Date.parse(`${s}T00:00:00Z`)) && new Date(`${s}T00:00:00Z`).toISOString().startsWith(s),
   "Use a valid date"
 );

@@ -1,4 +1,4 @@
-import AIChatPanel from "@/components/ai/AIChatPanel";
+import AssistantChat from "@/components/ai/AssistantChat";
 import PageHeader from "@/components/ui/PageHeader";
 import RoleGate from "@/components/shell/RoleGate";
 
@@ -11,7 +11,7 @@ export default function AssistantPage() {
         title="AI Assistant"
         description="Ask about attendance, leave, payroll and company policy. Answers only use data your role can see."
       />
-      <AIChatPanel variant="inline" />
+      <AssistantChat variant="inline" />
     </RoleGate>
   );
 }

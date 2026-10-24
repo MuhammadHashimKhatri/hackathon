@@ -35,7 +35,7 @@ export default function Tabs({ tabs, value, onChange, defaultValue, className, c
         ref={listRef}
         role="tablist"
         onKeyDown={onKeyDown}
-        className="flex gap-1 overflow-x-auto border-b border-line"
+        className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line"
       >
         {tabs.map((t) => {
           const selected = t.id === active;

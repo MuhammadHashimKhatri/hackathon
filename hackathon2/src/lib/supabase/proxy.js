@@ -2,9 +2,12 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import { decideRedirect } from "@/lib/auth/redirects";
 
-// Setup never flips back to "not done" in a running app, so once seen it is
-// remembered for this server instance. (/login re-checks after reset.sql.)
-let setupKnownComplete = false;
+// "Setup done" is remembered for a short while to skip a DB round trip for
+// signed-out visitors. /login and /setup always re-check, and the memory
+// expires, so running reset.sql brings a running app back to /setup.
+const SETUP_MEMORY_MS = 30_000;
+let setupKnownCompleteAt = 0;
+const setupKnownComplete = () => Date.now() - setupKnownCompleteAt < SETUP_MEMORY_MS;
 
 // One round trip: setup flag + the user's app_users state (fn_proxy_state).
 // Plain fetch with the secret key: proxy code can't import "server-only" modules.
@@ -50,11 +53,11 @@ export async function updateSession(request) {
   const { pathname } = request.nextUrl;
   if (pathname === "/api" || pathname.startsWith("/api/")) return response;
 
-  let state = { setup_completed: setupKnownComplete };
-  if (userId || !setupKnownComplete) {
+  let state = { setup_completed: setupKnownComplete() };
+  if (userId || !state.setup_completed || pathname === "/login" || pathname === "/setup") {
     try {
       state = await fetchProxyState(userId);
-      if (state.setup_completed) setupKnownComplete = true;
+      setupKnownCompleteAt = state.setup_completed ? Date.now() : 0;
     } catch (err) {
       // Fail open: pages still check the actor themselves (RoleGate / getPageActor).
       console.error(err);

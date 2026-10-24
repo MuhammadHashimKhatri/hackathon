@@ -63,6 +63,12 @@ for (const table of TABLES) {
     error?.message ?? `setup_completed=${data.setup_completed}`);
 }
 
+// 2c. Employee registration from 003_employees.sql (empty list: writes nothing).
+{
+  const { data, error } = await server.rpc("fn_register_employees", { p_rows: [], p_actor: null });
+  report(!error && Array.isArray(data) && data.length === 0, "fn_register_employees (003_employees.sql)", error?.message ?? "ok");
+}
+
 // 3. Lock-down: RLS, triggers, no anon privileges.
 {
   const { data: health, error } = await server.rpc("fn_schema_health");

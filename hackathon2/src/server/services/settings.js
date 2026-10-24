@@ -29,7 +29,8 @@ function toSettings(row) {
   };
 }
 
-async function loadSettings() {
+// No role check: for services that need the rules (attendance, payroll). Pages use getSettings.
+export async function loadSettings() {
   const { data, error } = await getDb().from("company_settings").select(COLUMNS).eq("id", 1).maybeSingle();
   if (error) throw error;
   if (!data) throw notFound("Company setup isn't complete yet.");
